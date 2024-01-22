@@ -1,70 +1,44 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const wordList = document.getElementById("wordList");
-    const transformedList = document.getElementById("transformedList");
-    const section1 = document.getElementById("section1");
-    const section2 = document.getElementById("section2");
-    const transformButton = document.getElementById("transformButton");
-    const revertButton = document.getElementById("revertButton");
+function toggleSection(section) {
+    // Disable all sections
+    document.getElementById("section1").disabled = true;
+    document.getElementById("section2").disabled = true;
+    document.getElementById("section3").disabled = true;
 
-    let words = ["apple", "grape", "banana"];
+    document.getElementById("section1").classList.add("disabled");
+    document.getElementById("section2").classList.add("disabled");
+    document.getElementById("section3").classList.add("disabled");
 
-    function swapLetters(oneWord) {
-        return oneWord.charAt(oneWord.length - 1) + oneWord.substring(1, oneWord.length - 1) + oneWord.charAt(0);
+    // Enable the selected section
+    if (section === 1) {
+        document.getElementById("section2").disabled = false;
+        document.getElementById("section2").classList.remove("disabled");
+    } else if (section === 2) {
+        document.getElementById("section3").disabled = false;
+        document.getElementById("section3").classList.remove("disabled");
     }
+}
 
-    words.forEach(word => {
-        const listItem = document.createElement("li");
-        listItem.textContent = word;
-        wordList.appendChild(listItem);
-    });
+function registerUser() {
+    const username = document.getElementById("newUsername").value;
+    const password = document.getElementById("newPassword").value;
+    const city = document.getElementById("city").value;
+    const state = document.getElementById("state").value;
 
-    transformButton.addEventListener("click", function () {
-        const transformedWords = words.map(swapLetters);
+    localStorage.setItem("username", username);
+    localStorage.setItem("password", password);
+    localStorage.setItem("city", city);
+    localStorage.setItem("state", state);
 
-        transformedList.innerHTML = '';
-        transformedWords.forEach(word => {
-            const listItem = document.createElement("li");
-            listItem.textContent = word;
-            transformedList.appendChild(listItem);
-        });
+    alert("Welcome " + username);
+}
 
-        section1.classList.add("hidden");
-        section2.classList.remove("hidden");
-        transformButton.classList.add("hidden");
-        revertButton.classList.remove("hidden");
-    });
+function loginUser() {
+    const username = document.getElementById("existingUsername").value;
+    const password = document.getElementById("existingPassword").value;
 
-    revertButton.addEventListener("click", function () {
-        section1.classList.remove("hidden");
-        section2.classList.add("hidden");
-        transformButton.classList.remove("hidden");
-        revertButton.classList.add("hidden");
-    });
-
-    let promptCount = 0;
-
-    function promptForWord() {
-        const userWord = prompt("Please enter a word (apple, grape, or banana):");
-        if (userWord !== null) {
-            if (userWord.toLowerCase() === "apple" || userWord.toLowerCase() === "grape" || userWord.toLowerCase() === "banana") {
-                promptCount++;
-                alert("Word entered: " + userWord);
-                if(promptCount === 3) {
-                    transformButton.disabled = false;
-                }
-            } else {
-                alert("Please enter one of the allowed words: apple, grape, or banana");
-            }
-        } else {
-            alert("No word entered");
-        }
+    if (username === localStorage.getItem("username") && password === localStorage.getItem("password")) {
+        alert("Welcome back " + username);
+    } else {
+        alert("Invalid");
     }
-
-    transformButton.disabled = true;
-
-    setInterval(function() {
-        if(promptCount < 3) {
-            promptForWord();
-        }
-    }, 1000);
-});
+}
